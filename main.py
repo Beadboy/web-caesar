@@ -17,11 +17,31 @@
 import webapp2
 import caesar
 
+header = """
+<h2> Web Caesar </h2>
+"""
+
+form = """
+<form method = "post">
+    <p> What message would you like to encrypt? </p>
+    <textarea name = "message"></textarea>
+    <br>
+    <p> By how many units do you wish to rotate the message? </p>
+    <input type = "text" name = "rotations">
+    <br>
+    <input type = "submit">
+</form>
+"""
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        message = "Listen to me son, I'm your dad. DESTROY HIM!"
-        encrypted_message = caesar.encrypt(message, 13)
-        self.response.write(encrypted_message)
+        self.response.write(header + form)
+
+    def post(self):
+        message = self.request.get("message")
+        rotations = int(self.request.get("rotations"))
+        encrypted_message = caesar.encrypt(message, rotations)
+        self.response.write("<p>Your encrypted message is:</p>"+ encrypted_message)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
